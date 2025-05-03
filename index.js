@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 const port = 7000;
@@ -9,6 +10,7 @@ const mongoURI = "mongodb+srv://aman1:%2EN%40U82kYD99d2qU@mycluster.psatu5y.mong
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, {

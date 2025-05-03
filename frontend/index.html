@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Form</title>
+</head>
+<body>
+  <h2>Add Student</h2>
+  <form id="studentForm">
+    <input type="text" id="name" placeholder="Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <button type="submit">Add Student</button>
+  </form>
+
+  <h2>All Students</h2>
+  <ul id="studentList"></ul>
+
+  <script>
+    const form = document.getElementById('studentForm');
+    const studentList = document.getElementById('studentList');
+
+    const BASE_URL = "https://newtesthere-gvf8zyp71-stupids-projects-8139b384.vercel.app";
+
+    // Add student
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      try {
+        const res = await fetch(`${BASE_URL}/students`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await res.json();
+        alert(data.message || 'Student added!');
+        form.reset();
+        loadStudents();
+      } catch (err) {
+        alert("Failed to add student.");
+        console.error(err);
+      }
+    });
+
+    // Get students
+    async function loadStudents() {
+      try {
+        const res = await fetch(`${BASE_URL}/students`);
+        const data = await res.json();
+
+        studentList.innerHTML = '';
+        data.students.forEach((student) => {
+          const li = document.createElement('li');
+          li.textContent = `${student.name} - ${student.email}`;
+          studentList.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Failed to load students", err);
+      }
+    }
+
+    loadStudents(); // Load on page load
+  </script>
+</body>
+</html>
